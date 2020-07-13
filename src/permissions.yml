@@ -1,0 +1,31 @@
+groups:
+  Default:
+    default: true
+    permissions:
+      - shop.buy
+      - balance.check
+      - currencymanager.use
+      - rank.see
+    prefix: '&7[&1Normie&7]'
+    suffix: ''
+  Moderator:
+    default: false
+    inheritance:
+      - Default
+    permissions:
+      - currencymanager.useOthers
+    prefix: '&7[&3Morderator&7]'
+  Admin:
+    default: false
+    inheritance:
+      - Default
+      - Moderator
+    permissions:
+      - currencymanager.change
+      - rank.change
+    prefix: '&7[&5Admin&7]'
+  Owner:
+    default: false
+    permissions:
+      all
+    prefix: '&7[&4OWNER&7]'

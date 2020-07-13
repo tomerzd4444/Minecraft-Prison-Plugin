@@ -1,0 +1,37 @@
+name: PrisonPlugin
+main: tomer.prison.PrisonPlugin
+version: 0.0.5
+author: blueblood4444
+description: A prison plugin for minecraft!
+api-version: 1.13
+
+commands:
+  createcell:
+    aliases: [cc]
+    description: Creates a prison cell!
+  deletecell:
+    aliases: [dc]
+    description: Deletes a prison cell!
+  setcell:
+    aliases: [sc]
+    description: Sets the prison cell's blocks!
+  balance:
+    aliases: [bal]
+    description: Shows your balance!
+  createmenu:
+    aliases: [cm]
+    description: Creates a menu!
+  menu:
+    aliases: [m]
+    description: Opens the menu!
+  setsellprice:
+    aliases: [ssp]
+    description: Sets the sell price of the item!
+  setbuyprice:
+    aliases: [sbp]
+    description: Sets the buy price of the item!
+  enchant:
+    description: Enchants an item!
+  sell:
+    aliases: [s]
+    description: Sells items!
