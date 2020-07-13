@@ -1,6 +1,6 @@
 name: PrisonPlugin
 main: tomer.prison.PrisonPlugin
-version: 0.0.5
+version: 0.0.7
 author: blueblood4444
 description: A prison plugin for minecraft!
 api-version: 1.13
@@ -31,6 +31,7 @@ commands:
     aliases: [sbp]
     description: Sets the buy price of the item!
   enchant:
+    aliases: [ench]
     description: Enchants an item!
   sell:
     aliases: [s]

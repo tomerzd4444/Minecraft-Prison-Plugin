@@ -29,7 +29,10 @@ public class SellCommand implements CommandExecutor {
         Inventory inv = player.getInventory();
         ItemStack item = player.getInventory().getItemInMainHand();
         for (int i = 0; i <= 8; i++){
-            if (inv.getContents()[i].equals(item)){
+            if (inv.getItem(i) == null) {
+                continue;
+            }
+            if (inv.getItem(i).equals(item)) {
                 player.sendMessage(String.valueOf(item));
                 invSlot = i;
                 break;

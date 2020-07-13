@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -11,23 +12,62 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.*;
 import tomer.prison.PrisonPlugin;
 import tomer.prison.managers.BalanceManager;
-import tomer.prison.managers.MenuManager.Utils.ReadFromFile;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
+import java.util.Set;
 
 public class Utils {
     private static PrisonPlugin plugin;
+    public static HashMap<String, Enchantment> enchantments = new HashMap<String, Enchantment>();
 
-    public Utils(PrisonPlugin plugin){
+    static {
+        enchantments.put("alldamage", Enchantment.DAMAGE_ALL);
+        enchantments.put("sharpness", Enchantment.DAMAGE_ALL);
+        enchantments.put("ardmg", Enchantment.DAMAGE_ARTHROPODS);
+        enchantments.put("baneofarthropods", Enchantment.DAMAGE_ARTHROPODS);
+        enchantments.put("undeaddamage", Enchantment.DAMAGE_UNDEAD);
+        enchantments.put("smite", Enchantment.DAMAGE_UNDEAD);
+        enchantments.put("digspeed", Enchantment.DIG_SPEED);
+        enchantments.put("efficiency", Enchantment.DIG_SPEED);
+        enchantments.put("durability", Enchantment.DURABILITY);
+        enchantments.put("unbreaking", Enchantment.DURABILITY);
+        enchantments.put("thorns", Enchantment.THORNS);
+        enchantments.put("highcrit", Enchantment.THORNS);
+        enchantments.put("fireaspect", Enchantment.FIRE_ASPECT);
+        enchantments.put("fire", Enchantment.FIRE_ASPECT);
+        enchantments.put("knockback", Enchantment.KNOCKBACK);
+        enchantments.put("fortune", Enchantment.LOOT_BONUS_BLOCKS);
+        enchantments.put("mobloot", Enchantment.LOOT_BONUS_MOBS);
+        enchantments.put("looting", Enchantment.LOOT_BONUS_MOBS);
+        enchantments.put("respiration", Enchantment.OXYGEN);
+        enchantments.put("protection", Enchantment.PROTECTION_ENVIRONMENTAL);
+        enchantments.put("protect", Enchantment.PROTECTION_ENVIRONMENTAL);
+        enchantments.put("blastprotect", Enchantment.PROTECTION_EXPLOSIONS);
+        enchantments.put("featherfall", Enchantment.PROTECTION_FALL);
+        enchantments.put("fireprotection", Enchantment.PROTECTION_FIRE);
+        enchantments.put("fireprotect", Enchantment.PROTECTION_FIRE);
+        enchantments.put("fireprot", Enchantment.PROTECTION_FIRE);
+        enchantments.put("projectileprotection", Enchantment.PROTECTION_PROJECTILE);
+        enchantments.put("silktouch", Enchantment.SILK_TOUCH);
+        enchantments.put("aquaaffinity", Enchantment.WATER_WORKER);
+        enchantments.put("flame", Enchantment.ARROW_FIRE);
+        enchantments.put("power", Enchantment.ARROW_DAMAGE);
+        enchantments.put("infinity", Enchantment.ARROW_INFINITE);
+        enchantments.put("luck", Enchantment.LUCK);
+        enchantments.put("lure", Enchantment.LURE);
+    }
+
+    public Utils(PrisonPlugin plugin) {
         Utils.plugin = plugin;
     }
-    public static String chat (String s){
-        return ChatColor.translateAlternateColorCodes('&',s);
+
+    public static String chat(String s) {
+        return ChatColor.translateAlternateColorCodes('&', s);
     }
 
-    public static ItemStack createItem(Inventory inv, Material material, int amount, int invSlot, String displayName, String... loreString){
+    public static ItemStack createItem(Inventory inv, Material material, int amount, int invSlot, String displayName, String... loreString) {
         ItemStack item;
         List<String> lore = new ArrayList();
 
@@ -84,59 +124,6 @@ public class Utils {
         inv.setItem(invSlot, item);
         return item;
     }
-//    public static void setRank(String p, String pRank){
-//        Player player = Bukkit.getPlayer(p);
-//        player.sendMessage("Changing rank");
-//        try {
-//            player.sendMessage("Changed your rank from " + rankingManager.getPlayerRank(Bukkit.getOfflinePlayer(p)) + " to " + pRank);
-//            rankingManager.changePlayerRank(Bukkit.getOfflinePlayer(p), pRank);
-//            PermissionAttachment attachment = player.addAttachment(plugin);
-//            String[] rank = {};
-//            String[] higherRank = {};
-//            player.sendMessage(pRank + " " + pRank.charAt(0) + pRank.charAt(1));
-//            String r = pRank.substring(2);
-//            if (r.equalsIgnoreCase("Owner") || r.equalsIgnoreCase("Admin") || r.equalsIgnoreCase("Moderator") || r.equalsIgnoreCase("Normie")){
-//                pRank = pRank.substring(2);
-//            }
-//
-////            if (pRank.startsWith("r")){
-////                pRank = pRank.substring(2);
-////            }
-//            player.sendMessage(pRank);
-//            //String pRank = rankingManager.getPlayerRank(player);
-//            if (pRank.equalsIgnoreCase("Normie")){
-//                rank = normieRank;
-//                higherRank = modRank;
-//                player.setDisplayName(Utils.chat("&7[&5Normie&7] " + player.getName()));
-//                plugin.addToTeam(player,1);
-//            } else if (pRank.equalsIgnoreCase("Moderator")){
-//                rank = modRank;
-//                higherRank = adminRank;
-//                player.setDisplayName(Utils.chat("&7[&3Moderator&7] " + player.getName()));
-//                plugin.addToTeam(player,2);
-//            } else if (pRank.equalsIgnoreCase("Admin")){
-//                rank = adminRank;
-//                higherRank = new String[]{};
-//                player.setDisplayName(Utils.chat("&7[&5Admin&7] " + player.getName()));
-//                plugin.addToTeam(player,3);
-//            }else if (pRank.equalsIgnoreCase("Owner")){
-//                Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(),"op " + player.getName());
-//                rank = new String[]{};
-//                higherRank = new String[]{};
-//                player.setDisplayName(Utils.chat("&7[&4OWNER&7] " + player.getName()));
-//                plugin.addToTeam(player,4);
-//            }
-//            player.sendMessage(String.format("%s\n%s", Arrays.toString(rank), Arrays.toString(higherRank)));
-//            for (String i : higherRank){
-//                attachment.setPermission(i,false);
-//            }
-//            for (String i : rank){
-//                attachment.setPermission(i,true);
-//            }
-//        } catch (Exception e){
-//            player.sendMessage(e.toString());
-//        }
-//    }
     public static void setBalScoreboard(Player player){
         BalanceManager balanceManager = new BalanceManager(plugin);
         ScoreboardManager manager = Bukkit.getScoreboardManager();
@@ -157,8 +144,8 @@ public class Utils {
         toReturn = str.split(",");
         return toReturn;
     }
-    public static void sell(Player player, int invSlot){
-        if (invSlot == -1){
+    public static void sell(Player player, int invSlot) {
+        if (invSlot == -1) {
             player.sendMessage("A problem has occurred");
             return;
         }
@@ -167,21 +154,60 @@ public class Utils {
         ItemStack item = inv.getItem(invSlot);
         player.sendMessage(String.valueOf(invSlot));
         player.sendMessage(String.valueOf(item));
+        if (item == null) {
+            return;
+        }
         String name = item.getType().toString();
         int amount = item.getAmount();
         player.sendMessage(String.valueOf(amount));
         player.sendMessage(name);
         BalanceManager balanceManager = new BalanceManager(plugin);
-        for (String key : config.getConfigurationSection("BLOCK_WORTH").getKeys(true)) {
+        Set<String> ores = config.getConfigurationSection("BLOCK_WORTH").getKeys(true);
+        for (String key : ores) {
             String string = config.getString("BLOCK_WORTH." + key);
-            if (string == null){
+            if (string == null) {
                 return;
             }
-            if (name.equals(key)){
+            if (name.equals(key)) {
                 player.sendMessage("key: " + key);
                 player.sendMessage("name: " + name);
-                balanceManager.addCurrencyToPlayer(player, Integer.parseInt(string)*amount);
+                balanceManager.addCurrencyToPlayer(player, Integer.parseInt(string) * amount);
             }
         }
+        if (ores.contains(name)) {
+            inv.setItem(invSlot, new ItemStack(Material.AIR));
+        }
     }
+
+    public static String convertToEnch(String enchName) {
+        return enchantments.get(enchName.toLowerCase()).getName();
+    }
+
+    public static ArrayList<String> getEnchantments() {
+        return new ArrayList<String>(enchantments.keySet());
+    }
+//    public static void sell(Player player, ItemStack item){
+//        FileConfiguration config = plugin.getConfig();
+//        Inventory inv = player.getInventory();
+//        player.sendMessage(String.valueOf(item));
+//        if (item == null){
+//            return;
+//        }
+//        String name = item.getType().toString();
+//        int amount = item.getAmount();
+//        player.sendMessage(String.valueOf(amount));
+//        player.sendMessage(name);
+//        BalanceManager balanceManager = new BalanceManager(plugin);
+//        for (String key : config.getConfigurationSection("BLOCK_WORTH").getKeys(true)) {
+//            String string = config.getString("BLOCK_WORTH." + key);
+//            if (string == null){
+//                return;
+//            }
+//            if (name.equals(key)){
+//                player.sendMessage("key: " + key);
+//                player.sendMessage("name: " + name);
+//                balanceManager.addCurrencyToPlayer(player, Integer.parseInt(string)*amount);
+//            }
+//        }
+//    }
 }
