@@ -1,6 +1,5 @@
 package tomer.prison.UI;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import org.apache.commons.lang.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,7 +13,8 @@ import tomer.prison.Utils.Utils;
 import tomer.prison.managers.MenuManager.Utils.ReadFromFile;
 
 import java.io.FileNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MenuUI {
     public static Inventory inv;
@@ -43,7 +43,6 @@ public class MenuUI {
 
     public static Inventory openInventory (Player player) throws FileNotFoundException {
         Inventory toReturn = Bukkit.createInventory(null, inv_rows, inventory_name);
-        player.sendMessage("rows: " + inv_rows);
         //Utils.createItem(inv, Material.DIAMOND, 1, 0, "&cTest Item", "&7This is lore line 1", "&bSecond line", "&3Third line");
         try {
             List<String> items = ReadFromFile.readLinesFromFile();

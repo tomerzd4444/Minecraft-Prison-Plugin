@@ -8,23 +8,28 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import tomer.prison.PrisonPlugin;
-import tomer.prison.managers.BalanceManager;
 import tomer.prison.Utils.Utils;
+import tomer.prison.managers.BalanceManager;
 
 public class PlayerJoinListener implements Listener {
-    private PrisonPlugin plugin;
-    private FileConfiguration config;
-    private BalanceManager balanceManager;
-    public PlayerJoinListener(PrisonPlugin plugin){
+    private final PrisonPlugin plugin;
+    private final FileConfiguration config;
+    private final BalanceManager balanceManager;
+
+    public PlayerJoinListener(PrisonPlugin plugin) {
         this.plugin = plugin;
-        this.balanceManager = new BalanceManager(plugin);
+        this.balanceManager = new BalanceManager(plugin, PrisonPlugin.path);
         config = plugin.getConfig();
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
+
     @EventHandler
-    public void onJoin(PlayerJoinEvent e){
+    public void onJoin(PlayerJoinEvent e) {
         Player player = e.getPlayer();
+        if (!player.hasPlayedBefore()) {
+            balanceManager.setPlayerCurrency(player, 0);
+        }
         Utils.setBalScoreboard(player);
     }
 

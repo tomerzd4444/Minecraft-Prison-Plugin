@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CreateBlockCommand implements CommandExecutor, TabCompleter {
-    private PrisonPlugin plugin;
+    private final PrisonPlugin plugin;
     public CreateBlockCommand(PrisonPlugin plugin){
         this.plugin = plugin;
         // checks the command name and set executors
@@ -31,7 +31,7 @@ public class CreateBlockCommand implements CommandExecutor, TabCompleter {
 
         if (args.length == 7){
             // gets the block's position
-            PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin);
+            PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin, PrisonPlugin.path);
             ArrayList<String> positions = prisonBlocksManager.getBlock(args[0], player);
 
             // debug

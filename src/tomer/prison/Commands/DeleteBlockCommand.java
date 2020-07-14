@@ -10,7 +10,7 @@ import tomer.prison.managers.PrisonBlocksManager;
 import java.util.ArrayList;
 
 public class DeleteBlockCommand implements CommandExecutor {
-    private PrisonPlugin plugin;
+    private final PrisonPlugin plugin;
 
     public DeleteBlockCommand(PrisonPlugin plugin) {
         this.plugin = plugin;
@@ -28,7 +28,7 @@ public class DeleteBlockCommand implements CommandExecutor {
         if (args.length == 1){
 
             // check if block exists
-            PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin);
+            PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin, PrisonPlugin.path);
             ArrayList<String> positions = prisonBlocksManager.getBlock(args[0], player);
 
             // debug

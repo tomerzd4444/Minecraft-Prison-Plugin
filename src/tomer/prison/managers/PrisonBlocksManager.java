@@ -14,10 +14,11 @@ import java.util.stream.Collectors;
 
 public class PrisonBlocksManager {
     public PrisonPlugin plugin;
-    private final String fileName = "blocksPos.txt";
+    private final String fileName;// = "D:/javaProjects/minecraftPlugins/PrisonPlugin/src/tomer/prison/Managers/Data/blocksPos.txt";
 
-    public PrisonBlocksManager(PrisonPlugin plugin) {
+    public PrisonBlocksManager(PrisonPlugin plugin, String path) {
         this.plugin = plugin;
+        fileName = path + "/blocksPos.txt";
     }
 
     public void setBlock(String name, String x1, String y1, String z1, String x2, String y2, String z2, Player player){

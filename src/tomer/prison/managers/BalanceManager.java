@@ -7,31 +7,40 @@ import org.bukkit.entity.Player;
 import tomer.prison.PrisonPlugin;
 import tomer.prison.Utils.Utils;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class BalanceManager {
     private final HashMap<String,Integer> currency = new HashMap<String,Integer>();
     public PrisonPlugin plugin;
-    private final String fileName = "balance.txt";
+    private final String fileName;// = "D:/javaProjects/minecraftPlugins/PrisonPlugin/src/tomer/prison/managers/Data/balance.txt";
 
-    public BalanceManager(PrisonPlugin plugin) {
+    public BalanceManager(PrisonPlugin plugin, String path) {
         this.plugin = plugin;
+        fileName = path + "/balance.txt";
     }
-    public void saveCurrencyFile() throws FileNotFoundException, IOException {
-        for (OfflinePlayer p : Bukkit.getOfflinePlayers()){
+
+    public void saveCurrencyFile() throws IOException {
+        for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
             FileWriter myWriter = null;
             try {
-                myWriter = new FileWriter(fileName);
-                myWriter.write(p.getUniqueId() + "," + currency.get(p.getUniqueId()));
+                File writer = new File(fileName);
+                List<String> lines = FileUtils.readLines(writer);
+                FileUtils.writeLines(writer, lines, false);
+//                myWriter = new FileWriter(fileName);
+//                myWriter.write(p.getUniqueId() + "," + currency.get(p.getUniqueId()));
             } catch (IOException e) {
                 e.printStackTrace();
             }
 
         }
     }
-    public void loadCurrencyFile() throws FileNotFoundException, IOException, ClassNotFoundException {
+
+    public void loadCurrencyFile() throws IOException, ClassNotFoundException {
         try {
             File myObj = new File(fileName);
             Scanner myReader = new Scanner(myObj);
@@ -63,13 +72,18 @@ public class BalanceManager {
 //        Score score = objective.getScore(Utils.chat("&3Balance:")); //Get a fake offline player
 //        score.setScore(getPlayerCurrency(player));
 //        player.setScoreboard(board);
-        FileWriter myWriter = new FileWriter(fileName);
         List<String> lines = FileUtils.readLines(new File(fileName));
-        List<String> updatedLines = lines.stream().filter(s -> !s.contains(player.getName())).collect(Collectors.toList());
+        // FileWriter myWriter = new File(fileName);
+        List<String> updatedLines = lines.stream().filter(s -> !s.contains(player.getName() + ",")).collect(Collectors.toList());
+        player.sendMessage("updated lines: " + Arrays.toString(new List[]{updatedLines}));
         FileUtils.writeLines(new File(fileName), updatedLines, false);
-        myWriter.write(System.getProperty( "line.separator" ));
-        myWriter.write(player.getName() + "," + fAmount);
-        myWriter.close();
+        Collection<String> linesToWrite = new ArrayList<String>();
+        //linesToWrite.add(System.getProperty( "line.separator" ));
+        linesToWrite.add(player.getName() + "," + fAmount);
+//        myWriter.write(System.getProperty( "line.separator" ));
+//        myWriter.write(player.getName() + "," + fAmount);
+        FileUtils.writeLines(new File(fileName), linesToWrite, true);
+        //myWriter.close();
         currency.put(player.getName(), fAmount);
         Utils.setBalScoreboard(player);
     }

@@ -4,7 +4,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,24 +13,23 @@ import org.bukkit.inventory.meta.ItemMeta;
 import tomer.prison.PrisonPlugin;
 import tomer.prison.managers.BalanceManager;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
 
 public class BlockBreakListener implements Listener {
-    private PrisonPlugin plugin;
-    private FileConfiguration config;
-    private BalanceManager balanceManager;
-    public BlockBreakListener(PrisonPlugin plugin){
+    private final PrisonPlugin plugin;
+    private final FileConfiguration config;
+    private final BalanceManager balanceManager;
+
+    public BlockBreakListener(PrisonPlugin plugin) {
         this.plugin = plugin;
-        this.balanceManager = new BalanceManager(plugin);
+        this.balanceManager = new BalanceManager(plugin, PrisonPlugin.path);
         config = plugin.getConfig();
 
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
+
     @EventHandler
-    public void onBlockBreak(BlockBreakEvent event){
+    public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Block block =  event.getBlock();
         Material mat = block.getBlockData().getMaterial();

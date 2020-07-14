@@ -1,18 +1,16 @@
 package tomer.prison.managers.MenuManager.Utils;
 
-import org.bukkit.entity.Player;
+import tomer.prison.managers.MenuManager.Menu;
 
-import javax.annotation.Nullable;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class ReadFromFile {
-    public static String fileName = "menu.txt";
+    public static String fileName = Menu.fileName;
     public static FileWriter myWriter;
 
     static {

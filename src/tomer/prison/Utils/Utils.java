@@ -125,14 +125,14 @@ public class Utils {
         return item;
     }
     public static void setBalScoreboard(Player player){
-        BalanceManager balanceManager = new BalanceManager(plugin);
+        BalanceManager balanceManager = new BalanceManager(plugin, PrisonPlugin.path);
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getNewScoreboard();
         Objective objective = board.registerNewObjective("test", "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName("INFO");
-        Score bal = objective.getScore(Utils.chat("&3Balance:"));
-        bal.setScore(balanceManager.getPlayerCurrency(player));
+        Score bal = objective.getScore(Utils.chat("&3Balance: ") + Utils.chat("&f") + balanceManager.getPlayerCurrency(player) + PrisonPlugin.config.getString("BALANCE.SIGN"));
+        bal.setScore(2);
         Score rank = objective.getScore(Utils.chat("&4Rank: " + "&6" + "Normie"));
         rank.setScore(1);
         Score warp = objective.getScore(Utils.chat("&2Warp: " + "&5" + "A"));
@@ -149,32 +149,27 @@ public class Utils {
             player.sendMessage("A problem has occurred");
             return;
         }
-        FileConfiguration config = plugin.getConfig();
+        FileConfiguration config = PrisonPlugin.config;
         Inventory inv = player.getInventory();
         ItemStack item = inv.getItem(invSlot);
-        player.sendMessage(String.valueOf(invSlot));
-        player.sendMessage(String.valueOf(item));
         if (item == null) {
             return;
         }
         String name = item.getType().toString();
         int amount = item.getAmount();
-        player.sendMessage(String.valueOf(amount));
-        player.sendMessage(name);
-        BalanceManager balanceManager = new BalanceManager(plugin);
+        BalanceManager balanceManager = new BalanceManager(plugin, PrisonPlugin.path);
         Set<String> ores = config.getConfigurationSection("BLOCK_WORTH").getKeys(true);
         for (String key : ores) {
             String string = config.getString("BLOCK_WORTH." + key);
             if (string == null) {
                 return;
             }
-            if (name.equals(key)) {
-                player.sendMessage("key: " + key);
-                player.sendMessage("name: " + name);
+            if (name.equals(key) || name.equals(key.substring(0, key.length() - 4))) {
                 balanceManager.addCurrencyToPlayer(player, Integer.parseInt(string) * amount);
+                break;
             }
         }
-        if (ores.contains(name)) {
+        if (ores.contains(name) || ores.contains(name + "_ORE")) {
             inv.setItem(invSlot, new ItemStack(Material.AIR));
         }
     }

@@ -6,16 +6,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import tomer.prison.PrisonPlugin;
-import tomer.prison.managers.BalanceManager;
 import tomer.prison.Utils.Utils;
+import tomer.prison.managers.BalanceManager;
 
 public class BalanceCommand implements CommandExecutor {
-    private PrisonPlugin plugin;
-    private BalanceManager balanceManager;
+    private final PrisonPlugin plugin;
+    private final BalanceManager balanceManager;
 
-    public BalanceCommand(PrisonPlugin plugin){
+    public BalanceCommand(PrisonPlugin plugin) {
         this.plugin = plugin;
-        this.balanceManager = new BalanceManager(plugin);
+        this.balanceManager = new BalanceManager(plugin, PrisonPlugin.path);
         // checks the command name and set executors
         plugin.getCommand("balance").setExecutor(this::onCommand);
     }
@@ -42,7 +42,7 @@ public class BalanceCommand implements CommandExecutor {
             // add, remove, set
             OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
             String command = args[1];
-            int amount = Integer.parseInt(args[2]);;
+            int amount = Integer.parseInt(args[2]);
             if (command.equalsIgnoreCase("add")){
                 if (p.hasPlayedBefore()) {
                     balanceManager.addCurrencyToPlayer(p, amount);

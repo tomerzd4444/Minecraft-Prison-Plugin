@@ -16,22 +16,24 @@ import java.util.Objects;
 import java.util.Random;
 
 public class SetBlockCommand implements CommandExecutor, TabCompleter {
-    private PrisonPlugin plugin;
-    private FileConfiguration config;
-    public SetBlockCommand(PrisonPlugin plugin){
+    private final PrisonPlugin plugin;
+    private final FileConfiguration config;
+
+    public SetBlockCommand(PrisonPlugin plugin) {
         this.plugin = plugin;
         // checks the command name and set executors
         config = plugin.getConfig();
         plugin.getCommand("setcell").setExecutor(this::onCommand);
         plugin.getCommand("setcell").setTabCompleter(this::onTabComplete);
     }
+
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Player player = (Player) sender;
         player.sendMessage("You used the set cell command!");
         String name = args[0];
-        PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin);
-        ArrayList<String> positions = prisonBlocksManager.getBlock(name,player);
+        PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin, PrisonPlugin.path);
+        ArrayList<String> positions = prisonBlocksManager.getBlock(name, player);
         if (positions == null){
             player.sendMessage("This prison block does not exist!");
             return false;
@@ -138,29 +140,37 @@ public class SetBlockCommand implements CommandExecutor, TabCompleter {
                 return null;
             }
             if (len == 1){
-                PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin);
+                PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin, PrisonPlugin.path);
                 ArrayList<String> cells = prisonBlocksManager.getAllBlocks();
                 return cells;
             }
             String arg = args[1];
             String[] newArg = arg.split(",");
-            arg = newArg[newArg.length-1];
+            arg = newArg[newArg.length - 1];
 //            if (arg.endsWith(",")){
 //                arg = "";
 //            }
             Material[] allItems = Material.values();
             //String[] allOres = {"STONE","COAL_ORE","IRON_ORE","GOLD_ORE","DIAMOND_ORE","EMERALD_ORE","COAL_BLOCK","IRON_BLOCK","GOLD_BLOCK","DIAMOND_BLOCK","EMERALD_BLOCK"};
-            String[] allOres = config.getConfigurationSection("BLOCK_WORTH").getKeys(true).toArray(new String[0]);
+            String[] ores = config.getConfigurationSection("BLOCK_WORTH").getKeys(true).toArray(new String[0]);
+            ArrayList<String> allOres = new ArrayList<String>();
+            for (String i : ores) {
+                if (i.endsWith("STONE") || i.endsWith("BLOCK") || i.endsWith("ORE")) {
+                    allOres.add(i);
+                } else {
+                    allOres.add(i + "_ORE");
+                }
+            }
 
             if (arg.equalsIgnoreCase("")) {
-                for ( String val : allOres) {
+                for (String val : allOres) {
 
                     //Material itemName = val;
                     blocks.add(String.valueOf(val));
 
                 }
 
-            }else {
+            } else {
                 for ( String val : allOres) {
 
                     //Material itemName = val;

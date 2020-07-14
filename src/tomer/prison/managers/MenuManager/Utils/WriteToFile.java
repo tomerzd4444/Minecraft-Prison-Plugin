@@ -1,15 +1,13 @@
 package tomer.prison.managers.MenuManager.Utils;
 
 import tomer.prison.managers.MenuManager.Menu;
-import tomer.prison.managers.MenuManager.SetMenuSize;
 
-import javax.annotation.Nullable;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
 public class WriteToFile {
-    public static String fileName = "menu.txt";
+    public static String fileName = Menu.fileName;
     public static FileWriter myWriterInt;
     public static FileWriter myWriterString;
 
