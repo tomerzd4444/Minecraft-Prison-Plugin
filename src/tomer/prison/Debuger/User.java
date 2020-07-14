@@ -10,6 +10,9 @@ public class User {
     }
 
     public static void sendOwnerMessage(String message) {
+        if (getOwner() == null) {
+            return;
+        }
         getOwner().sendMessage(message);
     }
 }

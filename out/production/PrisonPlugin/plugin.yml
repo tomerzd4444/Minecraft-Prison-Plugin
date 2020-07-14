@@ -36,3 +36,6 @@ commands:
   sell:
     aliases: [s]
     description: Sells items!
+  fly:
+    aliases: [f]
+    description: Makes you fly!

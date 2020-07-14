@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import tomer.prison.PrisonPlugin;
@@ -47,12 +48,20 @@ public class BlockBreakListener implements Listener {
 //        }
         Collection<ItemStack> drops = block.getDrops(pickaxe);
         block.getDrops(pickaxe).clear();
-        for(ItemStack i : drops) {
+        for (ItemStack i : drops) {
             event.getBlock().getDrops(pickaxe).remove(i);
             player.getInventory().addItem(i);
         }
         event.setCancelled(true);
         block.setType(Material.AIR);
+        Inventory inv = player.getInventory();
+        for (int i = 0; i <= 35; i++) {
+            player.sendMessage(String.valueOf(inv.getItem(i)));
+            if (inv.getItem(i) == null) {
+                return;
+            }
+        }
+        player.sendMessage("inventory is full");
 //        for (String key : config.getConfigurationSection("BLOCK_WORTH").getKeys(true)) {
 //            String string = config.getString("BLOCK_WORTH." + key);
 //            if (mat.toString().equals(key)){

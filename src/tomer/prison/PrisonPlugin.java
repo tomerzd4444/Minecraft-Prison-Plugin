@@ -36,6 +36,7 @@ public class PrisonPlugin extends JavaPlugin {
         new SetSellPriceCommand(this);
         new SetBuyPriceCommand(this);
         new SellCommand(this);
+        new FlyCommand(this);
     }
 
     private void loadListeners() {

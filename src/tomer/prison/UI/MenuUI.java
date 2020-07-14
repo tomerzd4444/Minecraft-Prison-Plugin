@@ -36,7 +36,6 @@ public class MenuUI {
 //            }
 //        }
         inv_rows = config.getConfigurationSection("MENU").getInt("SIZE");
-        player.sendMessage(String.valueOf(inv_rows));
         // inv_rows = Integer.parseInt(Objects.requireNonNull(ReadFromFile.readLineFromFile(0)));
         inv = Bukkit.createInventory(null, inv_rows, inventory_name);
     }
