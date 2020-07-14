@@ -75,7 +75,6 @@ public class BalanceManager {
         List<String> lines = FileUtils.readLines(new File(fileName));
         // FileWriter myWriter = new File(fileName);
         List<String> updatedLines = lines.stream().filter(s -> !s.contains(player.getName() + ",")).collect(Collectors.toList());
-        player.sendMessage("updated lines: " + Arrays.toString(new List[]{updatedLines}));
         FileUtils.writeLines(new File(fileName), updatedLines, false);
         Collection<String> linesToWrite = new ArrayList<String>();
         //linesToWrite.add(System.getProperty( "line.separator" ));
@@ -165,16 +164,20 @@ public class BalanceManager {
             Scanner myReader = new Scanner(myObj);
             String data = "";
             int loc = 0;
+            String id = "";
             while (myReader.hasNextLine()) {
                 data = myReader.nextLine();
                 String[] parts = data.split(",");
                 if (parts.length == 2) {
-                    String id = parts[0];
+                    id = parts[0];
                     ra = Integer.parseInt(parts[1]);
                     if (id.equals(p.getUniqueId().toString())) {
                         break;
                     }
                 }
+            }
+            if (!id.equals(p.getUniqueId().toString())) {
+                return -1;
             }
             // ra = data.substring(loc);
             myReader.close();

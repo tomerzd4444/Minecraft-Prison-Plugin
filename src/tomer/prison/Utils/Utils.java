@@ -16,7 +16,6 @@ import tomer.prison.managers.BalanceManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 public class Utils {
     private static PrisonPlugin plugin;
@@ -135,7 +134,7 @@ public class Utils {
         bal.setScore(2);
         Score rank = objective.getScore(Utils.chat("&4Rank: " + "&6" + "Normie"));
         rank.setScore(1);
-        Score warp = objective.getScore(Utils.chat("&2Warp: " + "&5" + "A"));
+        Score warp = objective.getScore(Utils.chat("&2Warp: " + "&5" + "a"));
         warp.setScore(0);
         player.setScoreboard(board);
     }
@@ -158,20 +157,22 @@ public class Utils {
         String name = item.getType().toString();
         int amount = item.getAmount();
         BalanceManager balanceManager = new BalanceManager(plugin, PrisonPlugin.path);
-        Set<String> ores = config.getConfigurationSection("BLOCK_WORTH").getKeys(true);
-        for (String key : ores) {
-            String string = config.getString("BLOCK_WORTH." + key);
-            if (string == null) {
-                return;
-            }
-            if (name.equals(key) || name.equals(key.substring(0, key.length() - 4))) {
-                balanceManager.addCurrencyToPlayer(player, Integer.parseInt(string) * amount);
-                break;
-            }
+//        for (String key : ores) {
+//            String string = config.getString("BLOCK_WORTH." + key);
+//            if (string == null) {
+//                return;
+//            }
+//            if (name.equals(key) || name.equals(key.substring(0, key.length() - 4))) {
+//                balanceManager.addCurrencyToPlayer(player, Integer.parseInt(string) * amount);
+//                break;
+//            }
+//        }
+        if (config.getString("BLOCK_WORTH." + name.toUpperCase()) != null) {
+            balanceManager.addCurrencyToPlayer(player, config.getInt("BLOCK_WORTH." + name.toUpperCase()) * amount);
+        } else {
+            return;
         }
-        if (ores.contains(name) || ores.contains(name + "_ORE")) {
-            inv.setItem(invSlot, new ItemStack(Material.AIR));
-        }
+        inv.setItem(invSlot, new ItemStack(Material.AIR));
     }
 
     public static String convertToEnch(String enchName) {

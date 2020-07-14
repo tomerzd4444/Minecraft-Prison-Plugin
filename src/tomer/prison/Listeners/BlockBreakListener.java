@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import tomer.prison.PrisonPlugin;
 import tomer.prison.managers.BalanceManager;
 
@@ -33,10 +32,7 @@ public class BlockBreakListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
         Block block =  event.getBlock();
-        Material mat = block.getBlockData().getMaterial();
         ItemStack pickaxe = player.getItemInHand();
-        ItemMeta pickaxeMeta = pickaxe.getItemMeta();
-        String name = pickaxe.getType().toString();
 //        if (name.equalsIgnoreCase("diamond_pickaxe")){
 //            player.sendMessage(Arrays.toString(new Map[]{pickaxeMeta.getEnchants()}));
 //            ArrayList<Enchantment> enchantments = new ArrayList<Enchantment>(pickaxeMeta.getEnchants().keySet());
@@ -56,7 +52,6 @@ public class BlockBreakListener implements Listener {
         block.setType(Material.AIR);
         Inventory inv = player.getInventory();
         for (int i = 0; i <= 35; i++) {
-            player.sendMessage(String.valueOf(inv.getItem(i)));
             if (inv.getItem(i) == null) {
                 return;
             }

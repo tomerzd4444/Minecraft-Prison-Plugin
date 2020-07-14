@@ -22,33 +22,32 @@ public class BalanceCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (args.length == 0){
+        if (args.length == 0) {
             OfflinePlayer p = Bukkit.getOfflinePlayer(sender.getName());
             int value = balanceManager.getPlayerCurrency(p);
             sender.sendMessage(Utils.chat("&2You have &6" + value + "$&2!"));
             // sender.sendMessage(Utils.chat("&e/currency"));
-        }
-        if (args.length == 1 && (sender.hasPermission("prisonPlugin.currencymanager.useOthers") || sender.hasPermission("prisonPlugin.all"))){
+        } else if (args.length == 1) {
             OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
             int value = balanceManager.getPlayerCurrency(p);
+            if (value == -1) {
+                sender.sendMessage("Could not find user " + args[0]);
+                return false;
+            }
             sender.sendMessage(Utils.chat("&2The user &3" + args[0] + "&2 have &6" + value + "$&2!"));
-        } else if (!(sender.hasPermission("prisonPlugin.useOthers") || sender.hasPermission("prisonPlugin.all"))){
-            sender.sendMessage(Utils.chat("&cYou do not have the permission to use this command."));
-        }
-        if (args.length == 2){
+        } else if (args.length == 2) {
             sender.sendMessage(Utils.chat("&e arguments can be 0, 1 and 3, not 2."));
-        }
-        if (args.length == 3 && (sender.hasPermission("prisonPlugin.currencymanager.change") || sender.hasPermission("prisonPlugin.all"))){
+        } else if (args.length == 3) {
             // add, remove, set
             OfflinePlayer p = Bukkit.getOfflinePlayer(args[0]);
             String command = args[1];
             int amount = Integer.parseInt(args[2]);
-            if (command.equalsIgnoreCase("add")){
+            if (command.equalsIgnoreCase("add")) {
                 if (p.hasPlayedBefore()) {
                     balanceManager.addCurrencyToPlayer(p, amount);
                     sender.sendMessage(Utils.chat("&2You successfully added &6" + amount + "$ &2to &3" + args[0]));
                 }
-            }else if (command.equalsIgnoreCase("remove")){
+            } else if (command.equalsIgnoreCase("remove")) {
                 if (p.hasPlayedBefore()) {
                     balanceManager.removeCurrencyFromPlayer(p, amount);
                     sender.sendMessage(Utils.chat("&2You successfully removed &6" + amount + "$ &2from &3" + args[0]));
@@ -61,8 +60,6 @@ public class BalanceCommand implements CommandExecutor {
             } else{
                 sender.sendMessage(Utils.chat("&4'" + command + "' is not a valid argument."));
             }
-        }else if (!(sender.hasPermission("prisonPlugin.currencymanager.change") || sender.hasPermission("prisonPlugin.all"))){
-            sender.sendMessage(Utils.chat("&cYou do not have the permission to use this command."));
         }
         return false;
     }
