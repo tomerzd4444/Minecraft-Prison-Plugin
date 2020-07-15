@@ -180,9 +180,6 @@ public class BalanceManager {
 //            e.printStackTrace();
 //        }
         UserData balance = PlayerYAMLUtil.readFile((Player) p);
-        if (balance == null) {
-            return -1;
-        }
         return balance.getBalance();
         //((Player) p).sendMessage(String.valueOf(PlayerFileUtils.readFile((Player) p).getBalance()));
         //return ra;

@@ -27,3 +27,9 @@ BALANCE:
 
 RANK:
   DEFAULT: a
+
+RANKUP:
+  a: 0
+  b: 1000
+  c: 3000
+  d: 10000

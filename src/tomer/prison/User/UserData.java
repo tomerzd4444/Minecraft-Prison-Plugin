@@ -29,6 +29,7 @@ public class UserData {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     public int getBalance() {

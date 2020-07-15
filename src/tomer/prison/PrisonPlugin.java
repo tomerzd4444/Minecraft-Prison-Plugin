@@ -2,6 +2,7 @@ package tomer.prison;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -16,6 +17,8 @@ import tomer.prison.Utils.Utils;
 import tomer.prison.managers.BalanceManager;
 import tomer.prison.managers.MenuManager.Menu;
 import tomer.prison.managers.PrisonBlocksManager;
+
+import java.io.File;
 
 public class PrisonPlugin extends JavaPlugin {
     BalanceManager balanceManager;
@@ -36,6 +39,7 @@ public class PrisonPlugin extends JavaPlugin {
         new SetBuyPriceCommand(this);
         new SellCommand(this);
         new FlyCommand(this);
+        new RankUpCommand(this);
     }
 
     private void loadListeners() {
@@ -57,13 +61,23 @@ public class PrisonPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        saveConfig();
+        this.saveConfig();
         path = this.getConfig().getString("PATH");
+        if (path == null) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                player.sendMessage(Utils.chat("An Error has occurred while loading the plugin"));
+            }
+            return;
+        }
+        String pathname = path.substring(0, path.length() - 18) + "config.yml";
+        Debugger.sendOwnerMessage(pathname);
+        File file = new File(pathname);
+        config = YamlConfiguration.loadConfiguration(file);
         loadCommands();
         loadListeners();
         loadManagers();
         loadUtils();
-        config = this.getConfig();
+        // config = this.getConfig();
         PluginDescriptionFile pdf = this.getDescription(); //Gets plugin.yml
         getLogger().info("Prison Plugin is now running!");
         //Bukkit.broadcastMessage(Utils.chat("&l&3Prison Plugin is now running!"));

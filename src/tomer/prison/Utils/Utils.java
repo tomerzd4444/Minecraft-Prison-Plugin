@@ -137,10 +137,10 @@ public class Utils {
         player.sendMessage(String.valueOf(money));
         Score bal = objective.getScore(Utils.chat("&3Balance: ") + Utils.chat("&f") + money + PrisonPlugin.config.getString("BALANCE.SIGN"));
         bal.setScore(2);
-        Score rank = objective.getScore(Utils.chat("&4Rank: " + "&6" + "Normie"));
-        rank.setScore(1);
-        Score warp = objective.getScore(Utils.chat("&2Warp: " + "&5" + PlayerYAMLUtil.readFile(player).getRank()));
-        warp.setScore(0);
+//        Score rank = objective.getScore(Utils.chat("&4Rank: " + "&6" + "Normie"));
+//        rank.setScore(1);
+        Score warp = objective.getScore(Utils.chat("&Rank: " + "&5" + PlayerYAMLUtil.readFile(player).getRank()));
+        warp.setScore(1);
         player.setScoreboard(board);
     }
     public static String[] stringToArrayList(String str){

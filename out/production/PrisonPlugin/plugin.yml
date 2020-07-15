@@ -39,3 +39,6 @@ commands:
   fly:
     aliases: [f]
     description: Makes you fly!
+  rankup:
+    aliases: [ru]
+    description: Ranks you up!
