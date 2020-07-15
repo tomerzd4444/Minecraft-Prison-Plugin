@@ -6,9 +6,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import tomer.prison.PrisonPlugin;
 import tomer.prison.managers.MenuManager.SetMenuSize;
-import tomer.prison.managers.MenuManager.Utils.WriteToFile;
-
-import java.io.IOException;
 
 public class CreateMenuCommand implements CommandExecutor {
 
@@ -30,11 +27,7 @@ public class CreateMenuCommand implements CommandExecutor {
             return false;
         }
         //menuCommand.setSize(size);
-        try {
-            SetMenuSize.setSize(size,player);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        SetMenuSize.setSize(size, player);
         sender.sendMessage("successfully changed the menu's size!");
         return false;
     }

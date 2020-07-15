@@ -3,6 +3,7 @@ package tomer.prison.Utils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -11,11 +12,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.*;
 import tomer.prison.PrisonPlugin;
+import tomer.prison.User.PlayerYAMLUtil;
 import tomer.prison.managers.BalanceManager;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 public class Utils {
     private static PrisonPlugin plugin;
@@ -123,18 +126,20 @@ public class Utils {
         inv.setItem(invSlot, item);
         return item;
     }
-    public static void setBalScoreboard(Player player){
+    public static void setBalScoreboard(Player player) {
         BalanceManager balanceManager = new BalanceManager(plugin, PrisonPlugin.path);
         ScoreboardManager manager = Bukkit.getScoreboardManager();
         Scoreboard board = manager.getNewScoreboard();
         Objective objective = board.registerNewObjective("test", "dummy");
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName("INFO");
-        Score bal = objective.getScore(Utils.chat("&3Balance: ") + Utils.chat("&f") + balanceManager.getPlayerCurrency(player) + PrisonPlugin.config.getString("BALANCE.SIGN"));
+        int money = balanceManager.getPlayerCurrency(player);
+        player.sendMessage(String.valueOf(money));
+        Score bal = objective.getScore(Utils.chat("&3Balance: ") + Utils.chat("&f") + money + PrisonPlugin.config.getString("BALANCE.SIGN"));
         bal.setScore(2);
         Score rank = objective.getScore(Utils.chat("&4Rank: " + "&6" + "Normie"));
         rank.setScore(1);
-        Score warp = objective.getScore(Utils.chat("&2Warp: " + "&5" + "a"));
+        Score warp = objective.getScore(Utils.chat("&2Warp: " + "&5" + PlayerYAMLUtil.readFile(player).getRank()));
         warp.setScore(0);
         player.setScoreboard(board);
     }
@@ -148,7 +153,7 @@ public class Utils {
             player.sendMessage("A problem has occurred");
             return;
         }
-        FileConfiguration config = PrisonPlugin.config;
+        FileConfiguration config = plugin.getConfig();
         Inventory inv = player.getInventory();
         ItemStack item = inv.getItem(invSlot);
         if (item == null) {
@@ -206,4 +211,17 @@ public class Utils {
 //            }
 //        }
 //    }
+public static Player getPlayerByUuid(UUID uuid) {
+    for (OfflinePlayer p : Bukkit.getServer().getOfflinePlayers()) {
+        if (p.getUniqueId().equals(uuid)) {
+            return (Player) p;
+        }
+    }
+    for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+        if (p.getUniqueId().equals(uuid)) {
+            return p;
+        }
+    }
+    return null;
+}
 }

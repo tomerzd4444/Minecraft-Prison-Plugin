@@ -1,6 +1,6 @@
 name: PrisonPlugin
 main: tomer.prison.PrisonPlugin
-version: 0.0.8
+version: 0.0.9
 author: blueblood4444
 description: A prison plugin for minecraft!
 api-version: 1.13

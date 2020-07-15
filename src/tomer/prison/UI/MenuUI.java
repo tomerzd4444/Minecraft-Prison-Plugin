@@ -24,19 +24,7 @@ public class MenuUI {
     public static void initialize(PrisonPlugin plugin, Player player) throws FileNotFoundException {
         inventory_name = Utils.chat("&6&lMenu");
         FileConfiguration config = plugin.getConfig();
-//        String[] properties = config.getConfigurationSection("MENU").getKeys(true).toArray(new String[0]);
-//        List<String> values = new ArrayList<String>(config.getConfigurationSection("MENU").getValues(true).keySet());
-//        player.sendMessage("properties: " + properties);
-//        player.sendMessage("values: " + values);
-//        for (int i = 0; i < properties.length; i++){
-//            player.sendMessage("i: " + properties[i]);
-//
-//            if (properties[i].equalsIgnoreCase("size")) {
-//                inv_rows = Integer.parseInt(values.get(i));
-//            }
-//        }
         inv_rows = config.getConfigurationSection("MENU").getInt("SIZE");
-        // inv_rows = Integer.parseInt(Objects.requireNonNull(ReadFromFile.readLineFromFile(0)));
         inv = Bukkit.createInventory(null, inv_rows, inventory_name);
     }
 

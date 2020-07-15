@@ -2,20 +2,22 @@ package tomer.prison.managers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.craftbukkit.libs.org.apache.commons.io.FileUtils;
 import org.bukkit.entity.Player;
 import tomer.prison.PrisonPlugin;
+import tomer.prison.User.PlayerYAMLUtil;
+import tomer.prison.User.UserData;
 import tomer.prison.Utils.Utils;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.UUID;
 
 public class BalanceManager {
-    private final HashMap<String,Integer> currency = new HashMap<String,Integer>();
+    private final HashMap<String, Integer> currency = new HashMap<String, Integer>();
     public PrisonPlugin plugin;
     private final String fileName;// = "D:/javaProjects/minecraftPlugins/PrisonPlugin/src/tomer/prison/managers/Data/balance.txt";
 
@@ -24,43 +26,33 @@ public class BalanceManager {
         fileName = path + "/balance.txt";
     }
 
-    public void saveCurrencyFile() throws IOException {
-        for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
-            FileWriter myWriter = null;
-            try {
-                File writer = new File(fileName);
-                List<String> lines = FileUtils.readLines(writer);
-                FileUtils.writeLines(writer, lines, false);
-//                myWriter = new FileWriter(fileName);
-//                myWriter.write(p.getUniqueId() + "," + currency.get(p.getUniqueId()));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
+//    public void saveCurrencyFile() throws IOException {
+//        for (OfflinePlayer p : Bukkit.getOfflinePlayers()) {
+//            FileWriter myWriter = null;
+//            try {
+//                File writer = new File(fileName);
+//                List<String> lines = FileUtils.readLines(writer);
+//                FileUtils.writeLines(writer, lines, false);
+////                myWriter = new FileWriter(fileName);
+////                myWriter.write(p.getUniqueId() + "," + currency.get(p.getUniqueId()));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//
+//        }
+//    }
 
     public void loadCurrencyFile() throws IOException, ClassNotFoundException {
-        try {
-            File myObj = new File(fileName);
-            Scanner myReader = new Scanner(myObj);
-            String data = "";
-            while (myReader.hasNextLine()) {
-                data = myReader.nextLine();
-                String id = "";
-                String[] parts = data.split(",");
-                if (parts.length == 2) {
-                    id = parts[0];
-                    int r = Integer.parseInt(parts[1]);
-                    if (!id.equals("")) {
-                        currency.put(id, r);
-                    }
-                }
+        List<String> results = new ArrayList<String>();
+        File[] files = new File(PrisonPlugin.path + "/Players").listFiles();
+        String name;
+        for (File file : files) {
+            if (file.isFile()) {
+                name = file.getName();
+                results.add(name);
+                Player player = Utils.getPlayerByUuid(UUID.fromString(name.substring(0, name.length() - 4)));
+                currency.put(player.getName(), PlayerYAMLUtil.readFile(player).getBalance());
             }
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("An error occurred.");
-            e.printStackTrace();
         }
     }
     private void removeAndChangeBalance(Player player, int fAmount) throws IOException {
@@ -72,17 +64,19 @@ public class BalanceManager {
 //        Score score = objective.getScore(Utils.chat("&3Balance:")); //Get a fake offline player
 //        score.setScore(getPlayerCurrency(player));
 //        player.setScoreboard(board);
-        List<String> lines = FileUtils.readLines(new File(fileName));
-        // FileWriter myWriter = new File(fileName);
-        List<String> updatedLines = lines.stream().filter(s -> !s.contains(player.getName() + ",")).collect(Collectors.toList());
-        FileUtils.writeLines(new File(fileName), updatedLines, false);
-        Collection<String> linesToWrite = new ArrayList<String>();
-        //linesToWrite.add(System.getProperty( "line.separator" ));
-        linesToWrite.add(player.getName() + "," + fAmount);
-//        myWriter.write(System.getProperty( "line.separator" ));
-//        myWriter.write(player.getName() + "," + fAmount);
-        FileUtils.writeLines(new File(fileName), linesToWrite, true);
+//        List<String> lines = FileUtils.readLines(new File(fileName));
+//        // FileWriter myWriter = new File(fileName);
+//        List<String> updatedLines = lines.stream().filter(s -> !s.contains(player.getName() + ",")).collect(Collectors.toList());
+//        FileUtils.writeLines(new File(fileName), updatedLines, false);
+//        Collection<String> linesToWrite = new ArrayList<String>();
+//        //linesToWrite.add(System.getProperty( "line.separator" ));
+//        linesToWrite.add(player.getName() + "," + fAmount);
+////        myWriter.write(System.getProperty( "line.separator" ));
+////        myWriter.write(player.getName() + "," + fAmount);
+//        FileUtils.writeLines(new File(fileName), linesToWrite, true);
         //myWriter.close();
+        UserData balance = PlayerYAMLUtil.readFile(player);
+        balance.setBalance(fAmount, player.getUniqueId());
         currency.put(player.getName(), fAmount);
         Utils.setBalScoreboard(player);
     }
@@ -157,34 +151,40 @@ public class BalanceManager {
         }
     }
     public int getPlayerCurrency(OfflinePlayer p) {
-        int ra = 0;
-        Player player = Bukkit.getPlayer(Objects.requireNonNull(p.getName()));
-        try {
-            File myObj = new File(fileName);
-            Scanner myReader = new Scanner(myObj);
-            String data = "";
-            int loc = 0;
-            String id = "";
-            while (myReader.hasNextLine()) {
-                data = myReader.nextLine();
-                String[] parts = data.split(",");
-                if (parts.length == 2) {
-                    id = parts[0];
-                    ra = Integer.parseInt(parts[1]);
-                    if (id.equals(p.getUniqueId().toString())) {
-                        break;
-                    }
-                }
-            }
-            if (!id.equals(p.getUniqueId().toString())) {
-                return -1;
-            }
-            // ra = data.substring(loc);
-            myReader.close();
-        } catch (FileNotFoundException e) {
-            player.sendMessage("An error occurred.");
-            e.printStackTrace();
+//        int ra = 0;
+//        Player player = Bukkit.getPlayer(Objects.requireNonNull(p.getName()));
+//        try {
+//            File myObj = new File(fileName);
+//            Scanner myReader = new Scanner(myObj);
+//            String data = "";
+//            int loc = 0;
+//            String id = "";
+//            while (myReader.hasNextLine()) {
+//                data = myReader.nextLine();
+//                String[] parts = data.split(",");
+//                if (parts.length == 2) {
+//                    id = parts[0];
+//                    ra = Integer.parseInt(parts[1]);
+//                    if (id.equals(p.getUniqueId().toString())) {
+//                        break;
+//                    }
+//                }
+//            }
+//            if (!id.equals(p.getName())) {
+//                return -1;
+//            }
+//            // ra = data.substring(loc);
+//            myReader.close();
+//        } catch (FileNotFoundException e) {
+//            player.sendMessage("An error occurred.");
+//            e.printStackTrace();
+//        }
+        UserData balance = PlayerYAMLUtil.readFile((Player) p);
+        if (balance == null) {
+            return -1;
         }
-        return ra;
+        return balance.getBalance();
+        //((Player) p).sendMessage(String.valueOf(PlayerFileUtils.readFile((Player) p).getBalance()));
+        //return ra;
     }
 }

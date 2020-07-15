@@ -4,7 +4,7 @@ import org.bukkit.entity.Player;
 
 import static org.bukkit.Bukkit.getServer;
 
-public class User {
+public class Debugger {
     public static Player getOwner() {
         return getServer().getPlayer("blueblood4444");
     }

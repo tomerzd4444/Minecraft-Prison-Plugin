@@ -6,17 +6,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import tomer.prison.Commands.*;
-import tomer.prison.Debuger.User;
+import tomer.prison.Debuger.Debugger;
 import tomer.prison.Listeners.BlockBreakListener;
 import tomer.prison.Listeners.InventoryClickListener;
 import tomer.prison.Listeners.PlayerJoinListener;
 import tomer.prison.UI.MenuUI;
+import tomer.prison.User.PlayerYAMLUtil;
 import tomer.prison.Utils.Utils;
 import tomer.prison.managers.BalanceManager;
 import tomer.prison.managers.MenuManager.Menu;
 import tomer.prison.managers.PrisonBlocksManager;
-
-import java.io.IOException;
 
 public class PrisonPlugin extends JavaPlugin {
     BalanceManager balanceManager;
@@ -46,24 +45,31 @@ public class PrisonPlugin extends JavaPlugin {
     }
 
     private void loadManagers() {
-        User.sendOwnerMessage(path);
         balanceManager = new BalanceManager(this, path);
         prisonBlocksManager = new PrisonBlocksManager(this, path);
         menu = new Menu();
     }
 
+    private void loadUtils() {
+        new Utils(this);
+        new PlayerYAMLUtil(this, path);
+    }
+
     @Override
     public void onEnable() {
-        path = this.getConfig().getString("PATH");
         saveConfig();
+        path = this.getConfig().getString("PATH");
         loadCommands();
         loadListeners();
         loadManagers();
-        new Utils(this);
+        loadUtils();
         config = this.getConfig();
         PluginDescriptionFile pdf = this.getDescription(); //Gets plugin.yml
         getLogger().info("Prison Plugin is now running!");
-        Bukkit.broadcastMessage(Utils.chat("&l&3Prison Plugin is now running!"));
+        //Bukkit.broadcastMessage(Utils.chat("&l&3Prison Plugin is now running!"));
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            player.sendMessage(Utils.chat("&l&3Prison Plugin is now running on version v" + pdf.getVersion() + "!"));
+        }
 //        Player owner = null;
 //        for (Player i : players){
 //            getLogger().info(i.getName());
@@ -72,7 +78,7 @@ public class PrisonPlugin extends JavaPlugin {
 //                owner = i;
 //            }
 //        }
-        Player owner = User.getOwner();
+        Player owner = Debugger.getOwner();
         try {
             balanceManager.loadCurrencyFile();
             menu.initialize(this, path);
@@ -84,11 +90,11 @@ public class PrisonPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        try {
-            balanceManager.saveCurrencyFile();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            balanceManager.saveCurrencyFile();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         getLogger().info("Prison Plugin is now disabled!");
     }
 

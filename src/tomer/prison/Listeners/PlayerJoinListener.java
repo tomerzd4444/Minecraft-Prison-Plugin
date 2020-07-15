@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import tomer.prison.PrisonPlugin;
+import tomer.prison.User.PlayerYAMLUtil;
 import tomer.prison.Utils.Utils;
 import tomer.prison.managers.BalanceManager;
 
@@ -29,6 +30,9 @@ public class PlayerJoinListener implements Listener {
         Player player = e.getPlayer();
         if (!player.hasPlayedBefore()) {
             balanceManager.setPlayerCurrency(player, 0);
+        }
+        if (!PlayerYAMLUtil.exists(player) || !player.hasPlayedBefore()) {
+            PlayerYAMLUtil.createPlayerFile(player);
         }
         Utils.setBalScoreboard(player);
     }

@@ -23,3 +23,7 @@ MENU:
 
 BALANCE:
   SIGN: $
+  START: 0
+
+RANK:
+  DEFAULT: a
