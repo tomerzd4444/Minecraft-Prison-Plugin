@@ -73,7 +73,7 @@ public class Utils {
         ItemStack item;
         List<String> lore = new ArrayList();
 
-        item = new ItemStack(material, amount);//Material.matchMaterial(materialString), amount);
+        item = new ItemStack(material, amount);
 
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(displayName);
@@ -82,14 +82,9 @@ public class Utils {
         }
         meta.setLore(lore);
         item.setItemMeta(meta);
-        // inv.setItem(invSlot, item);
         return item;
     }
     public static ItemStack createStackItem(Inventory inv, ItemStack item){
-        //ItemStack item;
-
-        //item = new ItemStack(material, amount);//Material.matchMaterial(materialString), amount);
-
         ItemMeta meta = item.getItemMeta();
         String displayName = meta.getDisplayName();
         List<String> lore = meta.getLore();
@@ -134,12 +129,9 @@ public class Utils {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         objective.setDisplayName("INFO");
         int money = balanceManager.getPlayerCurrency(player);
-        player.sendMessage(String.valueOf(money));
         Score bal = objective.getScore(Utils.chat("&3Balance: ") + Utils.chat("&f") + money + PrisonPlugin.config.getString("BALANCE.SIGN"));
         bal.setScore(2);
-//        Score rank = objective.getScore(Utils.chat("&4Rank: " + "&6" + "Normie"));
-//        rank.setScore(1);
-        Score warp = objective.getScore(Utils.chat("&Rank: " + "&5" + PlayerYAMLUtil.readFile(player).getRank()));
+        Score warp = objective.getScore(Utils.chat("&4Rank: " + "&5" + PlayerYAMLUtil.readFile(player).getRank()));
         warp.setScore(1);
         player.setScoreboard(board);
     }
@@ -162,16 +154,6 @@ public class Utils {
         String name = item.getType().toString();
         int amount = item.getAmount();
         BalanceManager balanceManager = new BalanceManager(plugin, PrisonPlugin.path);
-//        for (String key : ores) {
-//            String string = config.getString("BLOCK_WORTH." + key);
-//            if (string == null) {
-//                return;
-//            }
-//            if (name.equals(key) || name.equals(key.substring(0, key.length() - 4))) {
-//                balanceManager.addCurrencyToPlayer(player, Integer.parseInt(string) * amount);
-//                break;
-//            }
-//        }
         if (config.getString("BLOCK_WORTH." + name.toUpperCase()) != null) {
             balanceManager.addCurrencyToPlayer(player, config.getInt("BLOCK_WORTH." + name.toUpperCase()) * amount);
         } else {
@@ -187,41 +169,21 @@ public class Utils {
     public static ArrayList<String> getEnchantments() {
         return new ArrayList<String>(enchantments.keySet());
     }
-//    public static void sell(Player player, ItemStack item){
-//        FileConfiguration config = plugin.getConfig();
-//        Inventory inv = player.getInventory();
-//        player.sendMessage(String.valueOf(item));
-//        if (item == null){
-//            return;
-//        }
-//        String name = item.getType().toString();
-//        int amount = item.getAmount();
-//        player.sendMessage(String.valueOf(amount));
-//        player.sendMessage(name);
-//        BalanceManager balanceManager = new BalanceManager(plugin);
-//        for (String key : config.getConfigurationSection("BLOCK_WORTH").getKeys(true)) {
-//            String string = config.getString("BLOCK_WORTH." + key);
-//            if (string == null){
-//                return;
-//            }
-//            if (name.equals(key)){
-//                player.sendMessage("key: " + key);
-//                player.sendMessage("name: " + name);
-//                balanceManager.addCurrencyToPlayer(player, Integer.parseInt(string)*amount);
-//            }
-//        }
-//    }
-public static Player getPlayerByUuid(UUID uuid) {
-    for (OfflinePlayer p : Bukkit.getServer().getOfflinePlayers()) {
-        if (p.getUniqueId().equals(uuid)) {
-            return (Player) p;
+
+    public static Player getPlayerByUuid(UUID uuid) {
+        for (OfflinePlayer p : Bukkit.getServer().getOfflinePlayers()) {
+            if (!(p instanceof Player)) {
+                continue;
+            }
+            if (p.getUniqueId().equals(uuid)) {
+                return (Player) p;
+            }
         }
-    }
-    for (Player p : Bukkit.getServer().getOnlinePlayers()) {
-        if (p.getUniqueId().equals(uuid)) {
-            return p;
+        for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+            if (p.getUniqueId().equals(uuid)) {
+                return p;
+            }
         }
+        return null;
     }
-    return null;
-}
 }

@@ -8,15 +8,13 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import tomer.prison.PrisonPlugin;
 import tomer.prison.UI.MenuUI;
-import tomer.prison.Utils.Utils;
 import tomer.prison.managers.MenuManager.Utils.AddItem;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class InventoryClickListener implements Listener {
 
-    private PrisonPlugin plugin;
+    private final PrisonPlugin plugin;
     public InventoryClickListener(PrisonPlugin plugin) {
         this.plugin = plugin;
 
@@ -41,7 +39,7 @@ public class InventoryClickListener implements Listener {
         Player player = (Player) event.getWhoClicked();
         ItemStack item = event.getCurrentItem();
         assert item != null;
-        String itemName = Objects.requireNonNull(item.getItemMeta()).getDisplayName();
+        //String itemName = Objects.requireNonNull(item.getItemMeta()).getDisplayName();
         String title = event.getView().getTitle();
 
         if (title.equals(MenuUI.inventory_name)){

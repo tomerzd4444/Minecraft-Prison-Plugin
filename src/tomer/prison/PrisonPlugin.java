@@ -59,20 +59,32 @@ public class PrisonPlugin extends JavaPlugin {
         new PlayerYAMLUtil(this, path);
     }
 
+    private void checkFiles() {
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (!PlayerYAMLUtil.exists(player)) {
+                PlayerYAMLUtil.createPlayerFile(player);
+            }
+        }
+    }
+
     @Override
     public void onEnable() {
         this.saveConfig();
-        path = this.getConfig().getString("PATH");
+        Player owner = Debugger.getOwner();
+        path = System.getProperty("user.dir") + File.separator + "plugins" + File.separator + "PrisonPlugin";
         if (path == null) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 player.sendMessage(Utils.chat("An Error has occurred while loading the plugin"));
             }
             return;
         }
-        String pathname = path.substring(0, path.length() - 18) + "config.yml";
-        Debugger.sendOwnerMessage(pathname);
+
+        checkFiles();
+        String pathname = path + File.separator + "config.yml";
         File file = new File(pathname);
+        owner.sendMessage("pathname: " + pathname);
         config = YamlConfiguration.loadConfiguration(file);
+        owner.sendMessage("config: " + config);
         loadCommands();
         loadListeners();
         loadManagers();
@@ -92,7 +104,7 @@ public class PrisonPlugin extends JavaPlugin {
 //                owner = i;
 //            }
 //        }
-        Player owner = Debugger.getOwner();
+
         try {
             balanceManager.loadCurrencyFile();
             menu.initialize(this, path);

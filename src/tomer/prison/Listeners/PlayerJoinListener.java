@@ -31,7 +31,8 @@ public class PlayerJoinListener implements Listener {
         if (!player.hasPlayedBefore()) {
             balanceManager.setPlayerCurrency(player, 0);
         }
-        if (!PlayerYAMLUtil.exists(player) || !player.hasPlayedBefore()) {
+        player.sendMessage("exists: " + PlayerYAMLUtil.exists(player));
+        if (!PlayerYAMLUtil.exists(player)) {
             PlayerYAMLUtil.createPlayerFile(player);
         }
         Utils.setBalScoreboard(player);

@@ -30,7 +30,6 @@ public class SetBlockCommand implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         Player player = (Player) sender;
-        player.sendMessage("You used the set cell command!");
         String name = args[0];
         PrisonBlocksManager prisonBlocksManager = new PrisonBlocksManager(plugin, PrisonPlugin.path);
         ArrayList<String> positions = prisonBlocksManager.getBlock(name, player);
@@ -38,7 +37,6 @@ public class SetBlockCommand implements CommandExecutor, TabCompleter {
             player.sendMessage("This prison block does not exist!");
             return false;
         }
-        player.sendMessage("here");
         String[] percentages = args[2].split(",");
         ArrayList<Integer> percent = new ArrayList<Integer>();
         player.sendMessage(percentages);
@@ -47,19 +45,16 @@ public class SetBlockCommand implements CommandExecutor, TabCompleter {
             percent.add(Integer.parseInt(i) + total);
             total += Integer.parseInt(i);
         }
-        player.sendMessage("here2");
         if (total != 100){
             player.sendMessage("The percentages don't add up to 100%!");
             return false;
         }
-        player.sendMessage("here3");
         String[] blocks = args[1].split(",");
         player.sendMessage(blocks);
         if (blocks.length != percentages.length){
             player.sendMessage("blocks and percentages don't have the same length!");
             return false;
         }
-        player.sendMessage("here4");
         for (String i : blocks){
             try {
                 Material.matchMaterial(i.toUpperCase());
@@ -68,7 +63,6 @@ public class SetBlockCommand implements CommandExecutor, TabCompleter {
                 return false;
             }
         }
-        player.sendMessage("here5");
         int xStart = Integer.parseInt(positions.get(0));
         int yStart = Integer.parseInt(positions.get(1));
         int zStart = Integer.parseInt(positions.get(2));
@@ -86,42 +80,28 @@ public class SetBlockCommand implements CommandExecutor, TabCompleter {
             yStart = yEnd;
             yEnd = temp;
         }
-        if (zStart > zEnd){
+        if (zStart > zEnd) {
             temp = zStart;
             zStart = zEnd;
             zEnd = temp;
         }
-        player.sendMessage("x start: " + xStart + " y start: " + yStart + " z start: " + zStart);
-        player.sendMessage("x end: " + xEnd + " y end: " + yEnd + " z end: " + zEnd);
         Random rand = new Random();
-        player.sendMessage("here6");
-        //try {
-            for (int x = xStart; x <= xEnd; x++) {
-                for (int y = yStart; y <= yEnd; y++) {
-                    for (int z = zStart; z <= zEnd; z++) {
-                        // player.sendMessage("x: " + x + " y: " + y + " z: " + z);
-                        int rand_int = rand.nextInt(100) + 1;
-                        if (rand_int <= percent.get(0)){
-                            player.getWorld().getBlockAt(x, y, z).setType(Objects.requireNonNull(Material.matchMaterial(blocks[0].toUpperCase())));
+        for (int x = xStart; x <= xEnd; x++) {
+            for (int y = yStart; y <= yEnd; y++) {
+                for (int z = zStart; z <= zEnd; z++) {
+                    // player.sendMessage("x: " + x + " y: " + y + " z: " + z);
+                    int rand_int = rand.nextInt(100) + 1;
+                    if (rand_int <= percent.get(0)) {
+                        player.getWorld().getBlockAt(x, y, z).setType(Objects.requireNonNull(Material.matchMaterial(blocks[0].toUpperCase())));
+                    }
+                    for (int i = 0; i < percent.size() - 1; i++) {
+                        if (rand_int >= percent.get(i) && rand_int <= percent.get(i + 1)) {
+                            player.getWorld().getBlockAt(x, y, z).setType(Objects.requireNonNull(Material.matchMaterial(blocks[i + 1].toUpperCase())));
                         }
-                        for (int i = 0; i < percent.size() - 1; i++){
-                            if (rand_int >= percent.get(i) && rand_int <= percent.get(i+1)){
-                                player.getWorld().getBlockAt(x, y, z).setType(Objects.requireNonNull(Material.matchMaterial(blocks[i+1].toUpperCase())));
-                            }
-                        }
-//                        if (rand_int >= percent.get(percent.size() - 1)){
-//                            player.getWorld().getBlockAt(x, y, z).setType(Objects.requireNonNull(Material.matchMaterial(blocks[percent.size() - 1].toUpperCase())));
-//                            times2 += 1;
-//                            block2 = blocks[percent.size() - 1];
-//                        }
-
                     }
                 }
             }
-//        }catch (Exception e){
-//            player.sendMessage(String.valueOf(e));
-//        }
-        player.sendMessage("here7");
+        }
         return false;
     }
 
@@ -147,11 +127,7 @@ public class SetBlockCommand implements CommandExecutor, TabCompleter {
             String arg = args[1];
             String[] newArg = arg.split(",");
             arg = newArg[newArg.length - 1];
-//            if (arg.endsWith(",")){
-//                arg = "";
-//            }
             Material[] allItems = Material.values();
-            //String[] allOres = {"STONE","COAL_ORE","IRON_ORE","GOLD_ORE","DIAMOND_ORE","EMERALD_ORE","COAL_BLOCK","IRON_BLOCK","GOLD_BLOCK","DIAMOND_BLOCK","EMERALD_BLOCK"};
             String[] ores = config.getConfigurationSection("BLOCK_WORTH").getKeys(true).toArray(new String[0]);
             ArrayList<String> allOres = new ArrayList<String>();
             for (String i : ores) {

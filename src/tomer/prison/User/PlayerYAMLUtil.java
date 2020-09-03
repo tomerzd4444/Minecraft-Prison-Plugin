@@ -14,6 +14,7 @@ import java.util.UUID;
 public class PlayerYAMLUtil {
     private static PrisonPlugin plugin;
     private static String path;
+    private static String pathname = null;
 
     public PlayerYAMLUtil(PrisonPlugin plugin, String path) {
         PlayerYAMLUtil.plugin = plugin;
@@ -22,19 +23,24 @@ public class PlayerYAMLUtil {
 
     public static void createPlayerFile(Player player) {
         String name = player.getName();
-        player.sendMessage(name);
         UUID id = player.getUniqueId();
-        File file = new File(path + "/Players/" + id.toString() + ".yml");
+        String dir = System.getProperty("user.dir");
+        player.sendMessage("dir: " + dir);
+        pathname = PrisonPlugin.path + File.separator + "playerdata" + File.separator + id.toString() + ".yml";//dir + File.separator + "plugins" + File.separator + "PrisonPlugin" + File.separator + "playerdata" + File.separator + id.toString() + ".yml";
+        player.sendMessage("path: " + pathname);
         boolean result;
+        File file;
         try {
+            file = new File(pathname);
             result = file.createNewFile();  //creates a new file
+            player.sendMessage("result: " + result);
             if (result) {
                 player.sendMessage("file created " + file.getCanonicalPath()); //returns the path string
             } else {
                 return;
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            player.sendMessage(String.valueOf(e));
             return;
         }
         ArrayList<String> lines = new ArrayList<String>();
@@ -49,17 +55,20 @@ public class PlayerYAMLUtil {
 
     public static boolean exists(Player player) {
         String name = player.getName();
-        player.sendMessage(name);
+        //player.sendMessage(name);
         UUID id = player.getUniqueId();
-        player.sendMessage(id.toString());
-        player.sendMessage(path);
-        File file = new File(path + "/Players/" + id.toString() + ".yml");
+        //player.sendMessage(id.toString());
+        //player.sendMessage(path);
+        player.sendMessage("pathname: " + pathname);
+        if (pathname == null) {
+            return false;
+        }
+        File file = new File(pathname);
         return file.exists();
     }
 
     public static UserData readFile(Player player) {
         UUID id = player.getUniqueId();
-        String pathname = path + "/Players/" + id.toString() + ".yml";
         UserData userData = new UserData(PlayerYAMLUtil.path);
         File file = new File(pathname);
         FileConfiguration yaml = YamlConfiguration.loadConfiguration(file);

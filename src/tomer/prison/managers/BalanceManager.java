@@ -19,11 +19,10 @@ import java.util.UUID;
 public class BalanceManager {
     private final HashMap<String, Integer> currency = new HashMap<String, Integer>();
     public PrisonPlugin plugin;
-    private final String fileName;// = "D:/javaProjects/minecraftPlugins/PrisonPlugin/src/tomer/prison/managers/Data/balance.txt";
+    private String fileName;// = "D:/javaProjects/minecraftPlugins/PrisonPlugin/src/tomer/prison/managers/Data/balance.txt";
 
     public BalanceManager(PrisonPlugin plugin, String path) {
         this.plugin = plugin;
-        fileName = path + "/balance.txt";
     }
 
 //    public void saveCurrencyFile() throws IOException {
@@ -44,7 +43,7 @@ public class BalanceManager {
 
     public void loadCurrencyFile() throws IOException, ClassNotFoundException {
         List<String> results = new ArrayList<String>();
-        File[] files = new File(PrisonPlugin.path + "/Players").listFiles();
+        File[] files = new File(PrisonPlugin.path + "/playerdata").listFiles();
         String name;
         for (File file : files) {
             if (file.isFile()) {

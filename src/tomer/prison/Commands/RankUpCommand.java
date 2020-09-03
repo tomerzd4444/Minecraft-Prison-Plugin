@@ -11,7 +11,6 @@ import tomer.prison.Utils.Utils;
 import tomer.prison.managers.BalanceManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class RankUpCommand implements CommandExecutor {
     PrisonPlugin plugin;
@@ -28,18 +27,9 @@ public class RankUpCommand implements CommandExecutor {
         Player player = (Player) sender;
         FileConfiguration config = PrisonPlugin.config;
         ArrayList<String> ranks = new ArrayList<>(config.getConfigurationSection("RANKUP").getKeys(true));
-//        ConfigurationSection configurationSection = config.getConfigurationSection("RANKUP");
-//        player.sendMessage(configurationSection.toString());
-//
-//        Map<String, Object> values = configurationSection.getValues(true);
-//        player.sendMessage(values.toString());
-//        player.sendMessage(values.keySet().toString());
-//        for (String i : values.keySet()){
-//            player.sendMessage("i: " + i);
-//        }
+
         String currentRank = PlayerYAMLUtil.readFile(player).getRank();
         int balance = PlayerYAMLUtil.readFile(player).getBalance();
-        player.sendMessage(Arrays.toString(new ArrayList[]{ranks}));
         int index = -1;
         for (int i = 0; i < ranks.size(); i++) {
             if (ranks.get(i).equals(currentRank)) {
